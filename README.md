@@ -58,3 +58,4 @@ INavBarItemView itemViewAdress = new MDNavBarItemTitleView(this);
         listOperateView.add(sortView2);
         mdNavBarView.setNavBarPopupOperateView(listOperateView);
         
+ 
