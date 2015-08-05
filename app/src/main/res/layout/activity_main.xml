@@ -1,0 +1,26 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:text="下拉导航菜单Demo（仿美团导航下拉菜单）"
+        android:textSize="18sp"/>
+
+    <com.mr_mo.mdnavbarview.navbarview.MDNavBarView
+        android:id="@+id/mdNavBarView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </com.mr_mo.mdnavbarview.navbarview.MDNavBarView>
+
+</LinearLayout>
