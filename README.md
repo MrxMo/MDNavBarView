@@ -22,7 +22,7 @@ Android 4.0+
 
 在app的gradle中添加
  ```
- compile 'com.github.MrxMo:MPay:v1.0.1'
+ compile 'com.github.MrxMo: MDNavBarView:v1.0.0'
  ```
  <br/>
 
