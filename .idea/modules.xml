@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MDNavBarView.iml" filepath="$PROJECT_DIR$/MDNavBarView.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mnavbarviewlib/mnavbarviewlib.iml" filepath="$PROJECT_DIR$/mnavbarviewlib/mnavbarviewlib.iml" />
     </modules>
   </component>
 </project>
