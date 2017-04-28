@@ -4,7 +4,9 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
+import android.support.annotation.ColorInt;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -143,6 +145,7 @@ public class MNavBarView extends LinearLayout implements View.OnClickListener {
         if (height <= 0) {
             height = NAV_BAR_POPUP_VIEW_HEIGHT_DEFAULT;
         }
+        LogUtil.e("", "show-->height:"+height);
         AnimationUtil.stretchAnimate(getContext(), navBarPopupOperateView, AnimationUtil.ANIMATION_DURATION, height);
 
     }
@@ -160,6 +163,7 @@ public class MNavBarView extends LinearLayout implements View.OnClickListener {
             if (height <= 0) {
                 height = NAV_BAR_POPUP_VIEW_HEIGHT_DEFAULT;
             }
+            LogUtil.e("", "hide-->height:"+height);
             AnimationUtil.shrinkAnimate(getContext(), navBarPopupOperateView, AnimationUtil.ANIMATION_DURATION, height);
 
             new Handler().postDelayed(new Runnable() {
@@ -174,6 +178,10 @@ public class MNavBarView extends LinearLayout implements View.OnClickListener {
     }
 
     public void setNavBarItemView(List<INavBarItemView> list) {
+        setNavBarItemView(list, true, getResources().getColor(R.color.m_cl_e6e6e6));
+    }
+
+    public void setNavBarItemView(List<INavBarItemView> list, boolean isAddLine, @ColorInt int lineColor) {
         if (list == null) {
             return;
         }
@@ -191,10 +199,12 @@ public class MNavBarView extends LinearLayout implements View.OnClickListener {
             itemView.setOnClickListener(this);
             navBarView.addView(itemView);
 
-            line = new View(getContext());
-            line.setLayoutParams(params);
-            line.setBackgroundColor(getResources().getColor(R.color.m_cl_e6e6e6));
-            navBarView.addView(line);
+            if (isAddLine) {
+                line = new View(getContext());
+                line.setLayoutParams(params);
+                line.setBackgroundColor(lineColor);
+                navBarView.addView(line);
+            }
         }
     }
 
@@ -206,7 +216,7 @@ public class MNavBarView extends LinearLayout implements View.OnClickListener {
         navBarView.setBackgroundColor(colorId);
     }
 
-    private void setNavBarViewLineColor(int color) {
+    public void setNavBarViewLineColor(int color) {
         navBarViewLine.setBackgroundColor(color);
     }
 

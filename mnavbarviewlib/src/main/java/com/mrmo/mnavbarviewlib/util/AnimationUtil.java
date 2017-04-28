@@ -13,7 +13,7 @@ import android.view.View;
  *         create at 2014-9-30 下午3:21:20
  */
 public class AnimationUtil {
-    public static final int ANIMATION_DURATION = 300;
+    public static final int ANIMATION_DURATION = 150;
     /**
      * X方向移动
      */
