@@ -25,7 +25,7 @@ public class MNavBarPopupSortView extends LinearLayout implements INavBarPopupVi
     private MNavBarSortAdapter adapter;
     private List list;
     private NavBarPopupSelectListener navBarPopupSelectListener;
-    private int navBarPopupViewHeight = MNavBarView.NAV_BAR_POPUP_VIEW_HEIGHT_DEFAULT;
+    private int navBarPopupViewHeight = LayoutParams.MATCH_PARENT;
 
     public MNavBarPopupSortView(Context context) {
         super(context);
@@ -96,6 +96,8 @@ public class MNavBarPopupSortView extends LinearLayout implements INavBarPopupVi
     @Override
     public void setNavBarPopupViewHeight(int height) {
         navBarPopupViewHeight = height;
+        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, navBarPopupViewHeight);
+        setLayoutParams(params);
     }
 
     @Override

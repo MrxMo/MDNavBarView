@@ -1,20 +1,23 @@
 package com.mrmo.mnavbarviewlib;
 
+import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Handler;
 import android.support.annotation.ColorInt;
 import android.util.AttributeSet;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.mrmo.mnavbarviewlib.impl.INavBarItemView;
 import com.mrmo.mnavbarviewlib.impl.INavBarPopupView;
+import com.mrmo.mnavbarviewlib.impl.OnClickNavItemListener;
 import com.mrmo.mnavbarviewlib.util.AnimationUtil;
 import com.mrmo.mnavbarviewlib.util.LogUtil;
 import com.mrmo.mnavbarviewlib.util.UnitConversionUtil;
@@ -30,7 +33,6 @@ import java.util.List;
 public class MNavBarView extends LinearLayout implements View.OnClickListener {
 
     private static final String TAG = MNavBarView.class.getSimpleName();
-    public static final int NAV_BAR_POPUP_VIEW_HEIGHT_DEFAULT = 210;
 
     private List<INavBarItemView> listItemView;
     private List<INavBarPopupView> listPopupView;
@@ -42,7 +44,8 @@ public class MNavBarView extends LinearLayout implements View.OnClickListener {
     private RelativeLayout navBarPopupOperateView;
     private View navBarPopupShadeView;
     private int navBarViewHeight;
-    private int navBarPopupViewHeight = NAV_BAR_POPUP_VIEW_HEIGHT_DEFAULT;
+
+    private OnClickNavItemListener onClickNavItemListener;
 
     public MNavBarView(Context context) {
         super(context);
@@ -82,7 +85,7 @@ public class MNavBarView extends LinearLayout implements View.OnClickListener {
         listItemView = new ArrayList<>();
         listPopupView = new ArrayList<>();
 
-        setNavBarViewHeight(UnitConversionUtil.dpToPx(getContext(), 48));
+        navBarViewHeight = UnitConversionUtil.dpToPx(getContext(), 45);
 
         initNavBarView();
         initNavBarContent();
@@ -98,7 +101,7 @@ public class MNavBarView extends LinearLayout implements View.OnClickListener {
         navBarPopupShadeView.setLayoutParams(params);
         navBarPopupShadeView.setBackgroundColor(Color.BLACK);
         navBarPopupView.addView(navBarPopupShadeView);
-        ObjectAnimator.ofFloat(navBarPopupShadeView, AnimationUtil.ALPHA, 0.4f).setDuration(1).start();
+        navBarPopupShadeView.setAlpha(0.4f);
         navBarPopupShadeView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,9 +109,7 @@ public class MNavBarView extends LinearLayout implements View.OnClickListener {
             }
         });
 
-//        TODO
-//        RelativeLayout.LayoutParams paramsOperate = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-        RelativeLayout.LayoutParams paramsOperate = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, UnitConversionUtil.dpToPx(getContext(), 200));
+        RelativeLayout.LayoutParams paramsOperate = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         navBarPopupOperateView = new RelativeLayout(getContext());
         navBarPopupOperateView.setLayoutParams(paramsOperate);
         navBarPopupOperateView.setBackgroundColor(Color.WHITE);
@@ -138,16 +139,20 @@ public class MNavBarView extends LinearLayout implements View.OnClickListener {
     }
 
     public void show() {
-        navBarPopupView.setVisibility(View.VISIBLE);
-        ObjectAnimator.ofFloat(navBarPopupShadeView, AnimationUtil.ALPHA, 0, 0.4f).setDuration(AnimationUtil.ANIMATION_DURATION).start();
-
-        int height = getNavBarPopupViewHeight();
-        if (height <= 0) {
-            height = NAV_BAR_POPUP_VIEW_HEIGHT_DEFAULT;
-        }
-        LogUtil.e("", "show-->height:"+height);
-        AnimationUtil.stretchAnimate(getContext(), navBarPopupOperateView, AnimationUtil.ANIMATION_DURATION, height);
-
+        navBarPopupShadeView.setVisibility(VISIBLE);
+        ObjectAnimator.ofFloat(
+                navBarPopupShadeView,
+                AnimationUtil.ALPHA,
+                0,
+                0.4f)
+                .setDuration(AnimationUtil.ANIMATION_DURATION)
+                .start();
+        ObjectAnimator.ofFloat(navBarPopupOperateView,
+                AnimationUtil.TRANSLATION_Y,
+                -getMobileHeight(),
+                0)
+                .setDuration(AnimationUtil.ANIMATION_DURATION)
+                .start();
     }
 
     public void hide() {
@@ -158,22 +163,33 @@ public class MNavBarView extends LinearLayout implements View.OnClickListener {
         setNoSelectItem();
         if (isAnimate) {
             ObjectAnimator.ofFloat(navBarPopupShadeView, AnimationUtil.ALPHA, 0.4f, 0).setDuration(AnimationUtil.ANIMATION_DURATION).start();
-
-            int height = getNavBarPopupViewHeight();
-            if (height <= 0) {
-                height = NAV_BAR_POPUP_VIEW_HEIGHT_DEFAULT;
-            }
-            LogUtil.e("", "hide-->height:"+height);
-            AnimationUtil.shrinkAnimate(getContext(), navBarPopupOperateView, AnimationUtil.ANIMATION_DURATION, height);
-
-            new Handler().postDelayed(new Runnable() {
+            ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(navBarPopupOperateView, AnimationUtil.TRANSLATION_Y, 0, -getMobileHeight());
+            objectAnimator.addListener(new Animator.AnimatorListener() {
                 @Override
-                public void run() {
-                    navBarPopupView.setVisibility(View.GONE);
+                public void onAnimationStart(Animator animation) {
+
                 }
-            }, AnimationUtil.ANIMATION_DURATION);
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    navBarPopupShadeView.setVisibility(GONE);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            });
+            objectAnimator.setDuration(AnimationUtil.ANIMATION_DURATION).start();
+
         } else {
-            navBarPopupView.setVisibility(View.GONE);
+            navBarPopupShadeView.setAlpha(0);
+            navBarPopupOperateView.setTranslationY(-getMobileHeight());
         }
     }
 
@@ -224,6 +240,9 @@ public class MNavBarView extends LinearLayout implements View.OnClickListener {
     public void onClick(View v) {
         MNavBarItemTitleView item = (MNavBarItemTitleView) v;
         LogUtil.i(TAG, "title:" + item.getText() + " " + item.isSelected());
+        if (onClickNavItemListener != null) {
+            onClickNavItemListener.onClick(v, (Integer) v.getTag());
+        }
         setSelectItem(v);
     }
 
@@ -262,7 +281,6 @@ public class MNavBarView extends LinearLayout implements View.OnClickListener {
                     view.setSelected(true);
                     int tag = (int) view.getTag();
                     INavBarPopupView iNavBarPopupView = setSelectPopupOperatView(tag);
-                    setNavBarPopupViewHeight(iNavBarPopupView.getNavBarPopupViewHeight());
                     show();
                     break;
                 }
@@ -273,7 +291,6 @@ public class MNavBarView extends LinearLayout implements View.OnClickListener {
                     view.setSelected(true);
                     int tag = (int) view.getTag();
                     INavBarPopupView iNavBarPopupView = setSelectPopupOperatView(tag);
-                    setNavBarPopupViewHeight(iNavBarPopupView.getNavBarPopupViewHeight());
                     show();
                     break;
                 }
@@ -330,6 +347,12 @@ public class MNavBarView extends LinearLayout implements View.OnClickListener {
 
     public void setNavBarViewHeight(int navBarViewHeight) {
         this.navBarViewHeight = navBarViewHeight;
+        LayoutParams layoutParams = null;
+        if (navBarView.getLayoutParams() == null) {
+            layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, navBarViewHeight);
+        }
+        layoutParams.height = navBarViewHeight;
+        navBarView.setLayoutParams(layoutParams);
     }
 
     private int getNavBarViewHeight() {
@@ -366,11 +389,15 @@ public class MNavBarView extends LinearLayout implements View.OnClickListener {
         }
     }
 
-    public void setNavBarPopupViewHeight(int height) {
-        this.navBarPopupViewHeight = height;
+    public void setOnClickNavItemListener(OnClickNavItemListener onClickNavItemListener) {
+        this.onClickNavItemListener = onClickNavItemListener;
     }
 
-    public int getNavBarPopupViewHeight() {
-        return navBarPopupViewHeight;
+    private int getMobileHeight() {
+        int mobileHeight = 0;
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        mobileHeight = displayMetrics.heightPixels;
+        return mobileHeight;
     }
 }

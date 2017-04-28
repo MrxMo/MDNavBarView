@@ -28,7 +28,7 @@ public class MNavBarItemTitleView extends android.support.v7.widget.AppCompatTex
     private int titleColorSelect = R.color.m_cl_555555;
     private int icon;
     private int iconSelect;
-    private boolean isShowIcon;
+    private boolean isShowIcon = true;
     private int bgImage;
     private int bgImageSelect;
     private int bgColor;
@@ -52,6 +52,7 @@ public class MNavBarItemTitleView extends android.support.v7.widget.AppCompatTex
     @Override
     public void setSelected(boolean selected) {
         super.setSelected(selected);
+        setGravity(Gravity.CENTER);
         if (selected) {
             setTitleColorSelect(titleColorSelect);
             setIconSelect(iconSelect);
@@ -71,11 +72,9 @@ public class MNavBarItemTitleView extends android.support.v7.widget.AppCompatTex
 
         setCompoundDrawablePadding(UnitConversionUtil.dpToPx(getContext(), 5));
         setGravity(Gravity.CENTER);
-        setIcon(R.mipmap.ic_select_arrow);
         setSingleLine();
         setTitleSize(15);
         setTitleColor(getResources().getColor(R.color.m_cl_555555));
-//        setBG(R.mipmap.ic_select_arrow);
         setEllipsize(TextUtils.TruncateAt.END);
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -150,12 +149,15 @@ public class MNavBarItemTitleView extends android.support.v7.widget.AppCompatTex
 
     /**
      * 只能隐藏，显示@{@link #setIcon} / @{@link #setIconSelect}
+     *
      * @param isShow
      */
     @Override
     public void isShowIcon(boolean isShow) {
         isShowIcon = isShow;
-        setCompoundDrawables(null, null, null, null);
+        if (!isShow) {
+            setCompoundDrawables(null, null, null, null);
+        }
     }
 
     @Override

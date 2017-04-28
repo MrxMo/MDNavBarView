@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         MNavBarPopupSortView sortView = new MNavBarPopupSortView(this);
         sortView.setBackgroundColor(Color.RED);
-        sortView.setNavBarPopupViewHeight(100);
+        sortView.setNavBarPopupViewHeight(250);
         sortView.setOnNavBarPopupSelectListener(new NavBarPopupSelectListener() {
             @Override
             public void onSelect(View view, int index, Object itemData) {
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
         MNavBarPopupSortView sortView1 = new MNavBarPopupSortView(this);
         sortView1.setBackgroundColor(Color.YELLOW);
-        sortView1.setNavBarPopupViewHeight(210);//设置下拉菜单的高度
+        sortView1.setNavBarPopupViewHeight(350);//设置下拉菜单的高度
         sortView1.setOnNavBarPopupSelectListener(new NavBarPopupSelectListener() {
             @Override
             public void onSelect(View view, int index, Object itemData) {
@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
         MNavBarPopupSortView sortView2 = new MNavBarPopupSortView(this);
         sortView2.setBackgroundColor(Color.BLUE);
-        sortView2.setNavBarPopupViewHeight(350);
+        sortView2.setNavBarPopupViewHeight(450);
         sortView2.setOnNavBarPopupSelectListener(new NavBarPopupSelectListener() {
             @Override
             public void onSelect(View view, int index, Object itemData) {
