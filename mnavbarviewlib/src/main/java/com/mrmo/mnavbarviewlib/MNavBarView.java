@@ -188,6 +188,7 @@ public class MNavBarView extends LinearLayout implements View.OnClickListener {
             objectAnimator.setDuration(AnimationUtil.ANIMATION_DURATION).start();
 
         } else {
+            navBarPopupShadeView.setVisibility(GONE);
             navBarPopupShadeView.setAlpha(0);
             navBarPopupOperateView.setTranslationY(-getMobileHeight());
         }
