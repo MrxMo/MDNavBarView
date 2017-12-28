@@ -204,6 +204,10 @@ public class MNavBarView extends LinearLayout implements View.OnClickListener {
         }
     }
 
+    public void setOnDismissListener(OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
+    }
+
     public void setNavBarItemView(List<INavBarItemView> list) {
         setNavBarItemView(list, true, getResources().getColor(R.color.m_cl_e6e6e6));
     }
