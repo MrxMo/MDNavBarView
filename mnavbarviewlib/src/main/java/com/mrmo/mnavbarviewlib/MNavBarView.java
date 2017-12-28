@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import com.mrmo.mnavbarviewlib.impl.INavBarItemView;
 import com.mrmo.mnavbarviewlib.impl.INavBarPopupView;
 import com.mrmo.mnavbarviewlib.impl.OnClickNavItemListener;
+import com.mrmo.mnavbarviewlib.impl.OnDismissListener;
 import com.mrmo.mnavbarviewlib.util.AnimationUtil;
 import com.mrmo.mnavbarviewlib.util.LogUtil;
 import com.mrmo.mnavbarviewlib.util.UnitConversionUtil;
@@ -46,6 +47,7 @@ public class MNavBarView extends LinearLayout implements View.OnClickListener {
     private int navBarViewHeight;
 
     private OnClickNavItemListener onClickNavItemListener;
+    private OnDismissListener onDismissListener;
 
     public MNavBarView(Context context) {
         super(context);
@@ -173,6 +175,10 @@ public class MNavBarView extends LinearLayout implements View.OnClickListener {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     navBarPopupShadeView.setVisibility(GONE);
+
+                    if (onDismissListener != null) {
+                        onDismissListener.onDismiss();
+                    }
                 }
 
                 @Override
@@ -191,6 +197,10 @@ public class MNavBarView extends LinearLayout implements View.OnClickListener {
             navBarPopupShadeView.setVisibility(GONE);
             navBarPopupShadeView.setAlpha(0);
             navBarPopupOperateView.setTranslationY(-getMobileHeight());
+
+            if (onDismissListener != null) {
+                onDismissListener.onDismiss();
+            }
         }
     }
 
@@ -247,7 +257,7 @@ public class MNavBarView extends LinearLayout implements View.OnClickListener {
         setSelectItem(v);
     }
 
-    private void setSelectItem(int index) {
+    public void setSelectItem(int index) {
         if (listItemView == null && listItemView.isEmpty()) {
             LogUtil.e(TAG, "listItemView is null. no item");
             return;
@@ -266,7 +276,7 @@ public class MNavBarView extends LinearLayout implements View.OnClickListener {
         setSelectItem((View) listItemView.get(index));
     }
 
-    private void setSelectItem(View view) {
+    public void setSelectItem(View view) {
         for (int i = 0; i < listItemView.size(); i++) {
             MNavBarItemTitleView itemView = (MNavBarItemTitleView) listItemView.get(i);
 
@@ -300,7 +310,7 @@ public class MNavBarView extends LinearLayout implements View.OnClickListener {
         }
     }
 
-    private void setNoSelectItem() {
+    public void setNoSelectItem() {
         for (int i = 0; i < listItemView.size(); i++) {
             View itemView = (View) listItemView.get(i);
             itemView.setSelected(false);
